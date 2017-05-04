@@ -19,12 +19,12 @@ Write-Host "characters."
 Write-Host ""
 Write-Host "The log will be saved to $PSScriptRoot\log.txt"
 Write-Host ""
-$boundUpper = 245
+$boundUpper = 245 #This can be changed to anything reasonable.
 Clear-Host
-out-file $PSScriptRoot\log.txt
-$count = (Get-ChildItem -Recurse -Depth 20).count
+out-file $PSScriptRoot\log.txt #Intialize Log File
+$count = (Get-ChildItem -Recurse -Depth 20).count #Get number of files. Use Depth to prevent issues with deep dir trees.
 Write-Host $count files to analyze.
-$progress = 0
+$progress = 0 #Initialize counter.
 try {
     foreach ($item in Get-ChildItem -recurse | Sort-Object FullName -desc | select-Object -ExpandProperty FullName) {
         $rawName = $item
@@ -46,19 +46,15 @@ try {
         }
     }
 }
-catch {
-   
-   
+catch {   
     $BorkMsg = $_.Exception.Message
     $BorkItem = $_.Exception.Itemname
     Write-Host "FAILED! $BorkMsg $BorkItem"
     Break
-    
 }
 finally {
-    Write-Host "FAILED!"
 }
-Clear-Host
+Clear-Host #This section checks for filename sizes larger than the value of $boundUpper
 $progress = 0
 try {
     foreach ($item in Get-ChildItem -recurse | Sort-Object FullName -desc | select-Object -ExpandProperty FullName) {
